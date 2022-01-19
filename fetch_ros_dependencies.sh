@@ -1,9 +1,17 @@
 #!/bin/bash
-PACKAGE_XML="./package.xml"
-DEPENDENCIES=($(grep -oP '(?<=build_depend>)[^<]+' "${PACKAGE_XML}"))
 
-for i in ${!DEPENDENCIES[*]}
-do
-  echo "$i" "${DEPENDENCIES[$i]}"
-  # instead of echo use the values to send emails, etc
-done
+export PACKAGE_XML="${1:-package.xml}"
+export SKIP_FILE="${2:-skip_packages.txt}"
+
+clone_dependency()
+{
+	if [ $# -gt 0 ]; then
+		if [[ ! $(grep -F "${1}" "${SKIP_FILE}") ]]; then
+			git clone "https://github.com/frcteam195/${1}.git"
+		fi
+	fi
+}
+export -f clone_dependency
+
+xmllint --xpath "//package/build_depend/text()" "${PACKAGE_XML}" | xargs -P 4 -I {} bash -c "clone_dependency {}"
+xmllint --xpath "//package/depend/text()" "${PACKAGE_XML}" | xargs -P 4 -I {} bash -c "clone_dependency {}"
