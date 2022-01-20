@@ -9,11 +9,15 @@ clone_dependency()
 		if [[ -f "${1}" ]]; then
 			if [[ "${SKIP_FILE}" == "" ]]; then
 				if [[ ! $(echo "${SKIP_LIST}" | grep -F "${1}") ]]; then
-					git clone --recurse-submodules -j4 "https://github.com/frcteam195/${1}.git"
+					if [[ ! -d "${1}" ]]; then
+						git clone --recurse-submodules -j4 "https://github.com/frcteam195/${1}.git"
+					fi
 				fi
 			else
 				if [[ ! $(grep -F "${1}" "${SKIP_FILE}") ]]; then
-					git clone --recurse-submodules -j4 "https://github.com/frcteam195/${1}.git"
+					if [[ ! -d "${1}" ]]; then
+						git clone --recurse-submodules -j4 "https://github.com/frcteam195/${1}.git"
+					fi
 				fi
 			fi
 		fi
