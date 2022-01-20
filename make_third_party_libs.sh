@@ -1,13 +1,13 @@
 #!/bin/bash
 
-forall() {
+foralldir() {
 	COMMAND=$@
 	if [ ${#@} -lt 1 ]; then
     	echo "No command entered! Please enter a command to run!"
 		return;
 	fi
 	echo "Running $COMMAND"
-	find . -maxdepth 1 \( ! -name . \) | grep -v \\./\\. | xargs -I {} bash -c "cd '{}' && echo && echo {} && $COMMAND";
+	find . -maxdepth 1 -type d \( ! -name . \) | grep -v \\./\\. | xargs -I {} bash -c "cd '{}' && echo && echo {} && $COMMAND";
 }
 
-forall make
+foralldir "make -j4 || true"
