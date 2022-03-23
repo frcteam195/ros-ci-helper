@@ -25,4 +25,5 @@ export -f clone_dependency
 if [[ -f "${1}" ]]; then
 	xmllint --xpath "//package/build_depend/text()" "${PACKAGE_XML}" | xargs -P 4 -I {} bash -c "clone_dependency {}"
 	xmllint --xpath "//package/depend/text()" "${PACKAGE_XML}" | xargs -P 4 -I {} bash -c "clone_dependency {}"
+	xmllint --xpath "//package/export/build_ci_depend/text()" "${PACKAGE_XML}" | xargs -P 4 -I {} bash -c "clone_dependency {}"
 fi
